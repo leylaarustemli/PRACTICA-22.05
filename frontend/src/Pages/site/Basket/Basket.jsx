@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import "./Basket.css"
 import MainContext from '../../../Context/Context'
 const Basket = () => {
-  const{basket,addToBasket}=useContext(MainContext)
+  const{basket,addToBasket,deleteBasket}=useContext(MainContext)
   return (
     <div>
       <table class="table">
@@ -23,13 +23,15 @@ const Basket = () => {
     <tr>
       <th scope="row">{index+1}</th>
       <td>{item.title}</td>
-      <td>{item.image}</td>
-      <td>{item.price}</td>
+      <td><img width="50px" src={item.image} alt="" /></td>
+      <td>{item.totalPrice}</td>
       <td>{item.count}</td>
       <td><button onClick={()=>{
         addToBasket(item._id)
       }} className='btn btn-primary '>add</button></td>
-      <td><button className='btn btn-danger'>delete</button></td>
+      <td><button onClick={()=>{
+        deleteBasket(item._id)
+      }} className='btn btn-danger'>delete</button></td>
       <td></td>
     </tr>
    ))}

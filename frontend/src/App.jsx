@@ -11,7 +11,7 @@ const Router=createBrowserRouter(ROUTES)
 const[data,setData]=useState([])
 const[basket,setBasket]=useState([])
 const contextData={
-  data,setData,basket,setBasket,addToBasket
+  data,setData,basket,setBasket,addToBasket,deleteBasket
 }
 useEffect(()=>{
 axios.get("http://localhost:8080/api/products").then(res=>{
@@ -19,25 +19,38 @@ axios.get("http://localhost:8080/api/products").then(res=>{
 })
 },[])
 
-function addToBasket(id){
-  let basketItem=basket.find(item=>item._id==id)
- 
-  if(basketItem){
-    basketItem.count++
-    basketItem.totalPrice+=basketItem.price
-    setBasket([...basket])
+function addToBasket(id) {
+  let target = data.find(item => item._id === id);
+
+  let basketItem = basket.find(item => item._id === id);
+
+  if (basketItem) {
+    basketItem.count++;
+    basketItem.totalPrice += target.price;
+    setBasket([...basket]);
+  } else {
+    let newItem = {
+      ...target,
+      count: 1,
+      totalPrice: target.price
+    };
+    setBasket([...basket, newItem]);
   }
-  else{
-    let target=basket.find(item=>item._id==id)
-    let newItem={
-      ...target,count:1,totalPrice:target.price
-    }
-    console.log(target);
-    setBasket([...basket])
-  }
-  console.log("item");
 }
 
+function deleteBasket (id){
+ let target=basket.find((x)=>x._id==id);
+ if(target.count>1){
+  target.count--,
+  target.totalPrice=target.price*target.count;
+  setBasket([...basket])
+ }
+ else{
+  let indexOfTarget=basket.indexOf(target);
+  basket.splice(indexOfTarget,1);
+  setBasket([...basket])
+ }
+}
 
 
 
